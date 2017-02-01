@@ -18,6 +18,7 @@ package org.chetan.camel.rest.example.spring.boot;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
+import org.chetan.camel.rest.example.spring.boot.utils.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.HealthEndpoint;
 import org.springframework.context.annotation.Bean;
@@ -25,11 +26,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 @Component
 public class MySpringBootRouter extends RouteBuilder {
 
     @Autowired
     private HealthEndpoint health;
+
+    @Autowired
+    private StringConverter sc;
 
     public static final String LOG_NAME = "org.chetan.camel.rest.example.spring.boot";
 
@@ -57,7 +64,11 @@ public class MySpringBootRouter extends RouteBuilder {
 
         from("timer://status?period=3000").routeId("status_RouteID")
             .bean(health, "invoke")
-            .log("Health is ${body}").id("status_ID");
+            .log("Health is ${body}").id("status_ID")
+            .bean(StringConverter.class, "convert2Base64(${body})")
+            .log("After convert2Base64 ${body}")
+            .bean(StringConverter.class, "convertBase642String(${body})")
+            .log("After Base64ToString ${body}");
     }
 
     @Bean
