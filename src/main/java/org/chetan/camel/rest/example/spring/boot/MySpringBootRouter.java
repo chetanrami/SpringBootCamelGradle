@@ -18,16 +18,13 @@ package org.chetan.camel.rest.example.spring.boot;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.chetan.camel.rest.example.spring.boot.utils.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.HealthEndpoint;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.apache.camel.component.servlet.CamelHttpTransportServlet;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 @Component
 public class MySpringBootRouter extends RouteBuilder {
