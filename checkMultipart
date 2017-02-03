@@ -32,3 +32,12 @@ Content-ID: <9fe9f12d-6697-446a-9ac6-89712b6d1449>
                 .setHeader("SOAPAction", constant(""))
                 .setHeader("Vary", constant("Accept-Encoding"))
                 .setHeader("X-ORACLE-DMS-ECID", constant("005Hss_4hahEoI5_rPp2iY0005J8001oTH")); 
+
+
+from("file://C:/temp?include=SoapResponse_Orig.xml&move=.done")
+                .setHeader("result").xpath("/*[name()='env:Envelope']/*[name()='env:Body']/*[name()='ns0:loadAndImportDataResponse']/*[name()='result']/text()", String.class)
+                .log("-------------->>>>> ${header.result.class}, ${header.result}")
+                .setHeader("msgID").xpath("/*[name()='env:Envelope']/*[name()='env:Header']/*[name()='wsa:MessageID']/text()", String.class)
+                .log("-------------->>>>> ${header.result.class}, ${header.msgID}")
+                .setHeader("action").xpath("/*[name()='env:Envelope']/*[name()='env:Header']/*[name()='wsa:Action']/text()", String.class)
+                .log("-------------->>>>> ${header.action.class}, ${header.action}");
