@@ -41,3 +41,8 @@ from("file://C:/temp?include=SoapResponse_Orig.xml&move=.done")
                 .log("-------------->>>>> ${header.result.class}, ${header.msgID}")
                 .setHeader("action").xpath("/*[name()='env:Envelope']/*[name()='env:Header']/*[name()='wsa:Action']/text()", String.class)
                 .log("-------------->>>>> ${header.action.class}, ${header.action}");
+
+String abc = new String(Files.readAllBytes(Paths.get("src/test/resources/OriginalResponse")));
+        String start = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
+        String end = "</env:Body></env:Envelope>";
+        System.out.println(start + StringUtils.substringBetween(abc, start, end) + end);
