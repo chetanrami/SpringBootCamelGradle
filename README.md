@@ -20,9 +20,7 @@ You will need to compile this example first:
 	mvn install
 
 ### Run
-To run the example type
-
-	mvn spring-boot:run
+Just go to MySpringBootApplication.java and run the main method...
 
 You can also execute the JAR directly:
 
