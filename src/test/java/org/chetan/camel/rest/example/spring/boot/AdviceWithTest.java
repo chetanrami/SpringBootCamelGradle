@@ -53,5 +53,4 @@ public class AdviceWithTest extends ChetanTestSupport{
         mock2.assertIsSatisfied();
         Assert.assertEquals("I'm Spring bean!", mock.getExchanges().get(0).getIn().getBody());
     }
-
 }

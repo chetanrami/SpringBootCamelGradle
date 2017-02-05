@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsa="http://www.w3.org/2005/08/addressing">
+    <env:Header>
+        <wsa:Action>
+            http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService//ErpIntegrationService/loadAndImportDataResponse
+        </wsa:Action>
+        <wsa:MessageID>urn:uuid:8375232c-e8ea-4744-be5d-5e15a801ce40</wsa:MessageID>
+    </env:Header>
+    <env:Body>
+        <ns0:loadAndImportDataResponse
+                xmlns:ns0="http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/types/">
+            <result xmlns="http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/types/">
+                25877
+            </result>
+        </ns0:loadAndImportDataResponse>
+    </env:Body>
+</env:Envelope>

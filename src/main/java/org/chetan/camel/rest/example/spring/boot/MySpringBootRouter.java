@@ -18,6 +18,7 @@ package org.chetan.camel.rest.example.spring.boot;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.builder.xml.Namespaces;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.chetan.camel.rest.example.spring.boot.utils.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,17 +56,32 @@ public class MySpringBootRouter extends RouteBuilder {
                 .log(LoggingLevel.INFO, LOG_NAME, "After transform body:----- ${body}").end();
         //endregion restRoutes
 
-        from("timer://simpleTimer?period=10000").routeId("simpleTimer_RouteID")
+        from("timer://simpleTimer?period=1000000").routeId("simpleTimer_RouteID")
                 .transform().simple("ref:myBean")
                 .to("log:out").id("simpleTimer_ID");
 
-        from("timer://status?period=3000").routeId("status_RouteID")
+        from("timer://status?period=300000").routeId("status_RouteID")
             .bean(health, "invoke")
             .log("Health is ${body}").id("status_ID")
             .bean(StringConverter.class, "convert2Base64(${body})")
             .log("After convert2Base64 ${body}")
             .bean(StringConverter.class, "convertBase642String(${body})")
             .log("After Base64ToString ${body}");
+
+        Namespaces ns = new Namespaces("env", "http://schemas.xmlsoap.org/soap/envelope/")
+                .add("wsa", "http://www.w3.org/2005/08/addressing")
+                .add("ns0", "http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/types/");
+
+        from("file:src/test/resources?include=SoapResponse_Orig.xml&move=.done")
+                .log("-------------->>>>> ${body.class}")
+                .setBody(simple("${bodyAs(String)}"))
+                .log("-------------->>>>> ${body.class}")
+                .setHeader("result").xpath("/*[name()='env:Envelope']/*[name()='env:Body']/*[name()='ns0:loadAndImportDataResponse']/*[name()='result']/text()", String.class)
+                .log("-------------->>>>> ${header.result.class}, ${header.result}")
+                .setHeader("msgID").xpath("/*[name()='env:Envelope']/*[name()='env:Header']/*[name()='wsa:MessageID']/text()", String.class)
+                .log("-------------->>>>> ${header.result.class}, ${header.msgID}")
+                .setHeader("action").xpath("/*[name()='env:Envelope']/*[name()='env:Header']/*[name()='wsa:Action']/text()", String.class)
+                .log("-------------->>>>> ${header.action.class}, ${header.action}");
     }
 
     @Bean
