@@ -63,10 +63,10 @@ public class MySpringBootRouter extends RouteBuilder {
         from("timer://status?period=300000").routeId("status_RouteID")
             .bean(health, "invoke")
             .log("Health is ${body}").id("status_ID")
-            .bean(StringConverter.class, "convert2Base64(${body})")
-            .log("After convert2Base64 ${body}")
-            .bean(StringConverter.class, "convertBase642String(${body})")
-            .log("After Base64ToString ${body}");
+            .setBody(simple("${bodyAs(String)}"))
+            .marshal().base64()
+            .log("After convert2Base64 ${body.class}, ${body}");
+//            .bean(StringConverter.class, "convertBase642String(${body})")
 
         Namespaces ns = new Namespaces("env", "http://schemas.xmlsoap.org/soap/envelope/")
                 .add("wsa", "http://www.w3.org/2005/08/addressing")
