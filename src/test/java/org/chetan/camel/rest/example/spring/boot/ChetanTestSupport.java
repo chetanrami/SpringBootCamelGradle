@@ -15,6 +15,8 @@ public class ChetanTestSupport {
     @Autowired
     ModelCamelContext camelContext;
 
+    @EndpointInject(uri = "direct:getRestEndPoint")
+    Endpoint getRestEndPointSource;
     @EndpointInject(uri = "direct:source")
     Endpoint source;
     @EndpointInject(uri = "direct:source2")
@@ -24,8 +26,10 @@ public class ChetanTestSupport {
     MockEndpoint target;
     @EndpointInject(uri = "mock:target2")
     MockEndpoint target2;
-    @EndpointInject(uri = "mock:target3")
-    MockEndpoint target3;
+    @EndpointInject(uri = "mock:getRestEndPointTarget")
+    MockEndpoint getRestEndPointTarget;
+    @EndpointInject(uri = "mock:intermediateDirectRouteMocking")
+    MockEndpoint intermediateDirectRouteMocking;
 
     private static Logger logger = LoggerFactory.getLogger(AdviceWithTest.class);
 }

@@ -1,7 +1,9 @@
 package org.chetan.camel.rest.example.spring.boot;
 
+import org.apache.camel.builder.AdviceWithBuilder;
 import org.apache.camel.builder.AdviceWithRouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.junit.Assert;
@@ -20,6 +22,19 @@ public class AdviceWithTest extends ChetanTestSupport{
 
     @Test
     public void shouldMockEndpoints() throws Exception {
+
+        camelContext.getRouteDefinition("getRestEndPoint_RouteId").adviceWith(camelContext, new AdviceWithRouteBuilder() {
+            public <T extends ProcessorDefinition<?>> AdviceWithBuilder<T> weaveByRoute(String route) {
+					return weaveByToString(".*" + route + "].*");
+				}
+            @Override
+            public void configure() throws Exception {
+                replaceFromWith(getRestEndPointSource);
+                weaveAddLast().to(getRestEndPointTarget);
+                weaveByRoute("direct:restContinue").replace().to(intermediateDirectRouteMocking);
+            }
+        });
+
         camelContext.getRouteDefinition("simpleTimer_RouteID").adviceWith(camelContext, new AdviceWithRouteBuilder() {
             @Override
             public void configure() throws Exception {
@@ -39,12 +54,15 @@ public class AdviceWithTest extends ChetanTestSupport{
 
         MockEndpoint mock = camelContext.getEndpoint(target.getEndpointUri(), MockEndpoint.class);
         MockEndpoint mock2 = camelContext.getEndpoint(target2.getEndpointUri(), MockEndpoint.class);
+        MockEndpoint mock3 = camelContext.getEndpoint(getRestEndPointTarget.getEndpointUri(), MockEndpoint.class);
 
         // Given
         mock.expectedMessageCount(1);
         mock2.expectedMessageCount(1);
+        mock3.expectedMessageCount(1);
 
         // When
+        producerTemplate.sendBody(getRestEndPointSource, "abc");
         producerTemplate.sendBody(source, "abc");
         producerTemplate.sendBody(source2, "cde");
 

@@ -45,9 +45,13 @@ public class MySpringBootRouter extends RouteBuilder {
         restConfiguration();
 
         rest().get("/abc")//http://localhost:8080/rest/abc
-                .produces("text/plain").route()
+                .produces("text/plain").route().routeId("getRestEndPoint_RouteId")
                 .transform().constant("This is rest abc get")
-                .log(LoggingLevel.INFO, LOG_NAME, "get body:----- ${body}").end();
+                .log(LoggingLevel.INFO, LOG_NAME, "get body:----- ${body}")//.end();
+                .to("direct:restContinue");
+
+        from("direct:restContinue").routeId("forLogging")
+                .log(LoggingLevel.INFO, LOG_NAME, "logging body from RouteId forLogging:----- ${body}");
 
         rest().post("/cde")//http://localhost:8080/rest/cde
                 .produces("text/plain").route()
