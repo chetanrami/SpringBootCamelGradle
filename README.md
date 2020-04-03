@@ -56,36 +56,3 @@ have.  Enjoy!
 
 
 The Camel riders!
-
-
- <settings>
-  <activeProfiles>
-    <!--make the profile active all the time -->
-    <activeProfile>securecentral</activeProfile>
-  </activeProfiles>
-  <profiles>
-    <profile>
-      <id>securecentral</id>
-      <!--Override the repository (and pluginRepository) "central" from the
-         Maven Super POM -->
-      <repositories>
-        <repository>
-          <id>central</id>
-          <url>http://repo1.maven.org/maven2</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>central</id>
-          <url>http://repo1.maven.org/maven2</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>
-  </profiles>
-</settings>
